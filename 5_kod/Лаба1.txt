@@ -1,0 +1,125 @@
+#define _USE_MATH_DEFINES
+#include <iostream>
+#include <cmath>
+#include <stdio.h>
+using namespace std;
+
+class Cone
+{
+private:
+	int m_height;
+	int m_radius;
+
+	double findSlantHeight()
+	{
+		return sqrt(m_height * m_height + m_radius * m_radius);
+	}
+public:
+	Cone(int height = 0, int radius = 0)
+		: m_height(height), m_radius(radius)
+	{
+		if (height < 0 || radius < 0)
+		{
+			m_height = 0;
+			m_radius = 0;
+			cout << "Неправильно введені дані, висоті і радіусу присвоєні значення 0\n";
+		}
+	}
+	int getHeignt()const
+	{
+		return m_height;
+	}
+	int getRadius()const
+	{
+		return m_radius;
+	}
+	void setHeight(int height)
+	{
+		if (height < 0)
+			throw "Неправильно введена висота, висота має бути додатньою";
+		m_height = height;
+	}
+	void setRadius(int radius)
+	{
+		if (radius < 0)
+			throw "Неправильно введенний радіус, радіус має бути додатнім";
+		m_radius = radius;
+	}
+
+	double findArea()
+	{
+		return M_PI * m_radius * m_radius + M_PI * m_radius * findSlantHeight();
+
+	}
+
+	double findVolume()
+	{
+		return 1.0 / 3 * M_PI * m_radius * m_height;
+	}
+
+	const Cone& printCone() const 
+	{
+		cout << "радіус = " << getRadius() << ", висота = " << getHeignt() << "\n";
+		return *this;
+	}
+
+	~Cone()
+	{
+
+	}
+};
+
+ostream& operator<< (ostream& out, const Cone& cone)
+{
+	cone.printCone();
+	return out;
+}
+
+int main()
+{
+	system("chcp 1251");
+	Cone testCone(3, 4);
+	int height, radius;
+	char answer;
+	cout << testCone;
+	cout << "Об\'єм конуса: " << testCone.findVolume() << "\n";
+	cout << "Площа поверхні конуса: " << testCone.findArea() << "\n";
+
+	while (true) {
+		cout << "Хочете змінити характеристики конуса? y/n\n";
+		cin >> answer;
+		if (answer == 'n')
+			return 0;
+		cout << "Введіть нову висоту:";
+		cin >> height;
+		try
+		{
+			testCone.setHeight(height);
+		}
+		catch (const char* exception)
+		{
+			cout << exception << "\nЗакінчення програми\n\n";
+			return 0;
+		}
+
+		cout << "Введіть новий радіус:";
+		cin >> radius;
+		try 
+		{
+			testCone.setRadius(radius);
+		}
+		catch (const char* exception)
+		{
+			cout << exception << "\nЗакінчення програми\n\n";
+			return 0;
+		}
+		cout<<"\n\nНові значення конуса:\n" << testCone;
+		cout << "Хочете дізнатися нові площу й об\'єм y/n?\n";
+		cin >> answer;
+		if (answer == 'n')
+			continue;
+		cout << "Об\'єм конуса: " << testCone.findVolume() << "\n";
+		cout << "Площа поверхні конуса: " << testCone.findArea() << "\n";
+
+	}
+}
